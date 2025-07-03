@@ -1,0 +1,680 @@
+<html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arraiá da Sorte - O Caça-Níqueis Junino!</title>
+    <style>
+        /* style.css */
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* Fonte festiva */
+            background: linear-gradient(to bottom, #8B4513, #FFD700, #4CAF50); /* Cores de terra, ouro e verde */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Estilos para a tela inicial e ranking (NOVOS) */
+        .tela-geral { /* Classe para centralizar telas iniciais/finais */
+            background-color: rgba(139, 69, 19, 0.9); /* Marrom madeira semi-transparente */
+            border: 10px solid #FFD700; /* Borda dourada */
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+        }
+        #nome-jogador {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #FFEB3B; /* Amarelo */
+            color: #8B4513; /* Marrom */
+            font-weight: bold;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #tela-inicial button, #ranking button { /* Estilos aplicados a todos os botões nessas telas */
+            background-color: #D32F2F; /* Vermelho vibrante */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 5px #B71C1C;
+            margin: 10px; /* Adicionado para espaçar os botões no ranking */
+        }
+        #tela-inicial button:hover, #ranking button:hover {
+            background-color: #B71C1C;
+        }
+        #tela-inicial button:active, #ranking button:active {
+            background-color: #8D0C0C;
+            box-shadow: 0 2px #8D0C0C;
+            transform: translateY(3px);
+        }
+
+        /* Estilo específico para o botão de limpar ranking, se quiser diferenciar */
+        #limpar-ranking-btn {
+            background-color: #4CAF50; /* Verde */
+            box-shadow: 0 5px #388E3C;
+        }
+        #limpar-ranking-btn:hover {
+            background-color: #388E3C;
+        }
+        #limpar-ranking-btn:active {
+            background-color: #2E7D32;
+            box-shadow: 0 2px #2E7D32;
+            transform: translateY(3px);
+        }
+
+
+        #lista-ranking {
+            list-style: decimal; /* Números para o ranking */
+            padding-left: 20px;
+            text-align: left;
+            color: #FFEB3B; /* Amarelo */
+            font-size: 1.2em;
+        }
+        #lista-ranking li {
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+        }
+        #lista-ranking li:last-child {
+            border-bottom: none;
+        }
+
+
+        .game-container {
+            /* Mantém os estilos existentes do game-container */
+            background-color: rgba(139, 69, 19, 0.9);
+            border: 10px solid #FFD700;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #FFEB3B; /* Amarelo ouro */
+            text-shadow: 3px 3px #D32F2F; /* Sombra vermelha */
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-style: italic;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .saldo {
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            background-color: #4CAF50; /* Verde */
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        #saldoAtual {
+            font-weight: bold;
+            color: #FFF;
+        }
+
+        .reels {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .reel {
+            background-color: #A0522D; /* Marrom claro */
+            border: 5px solid #8B0000; /* Vermelho escuro */
+            border-radius: 10px;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em; /* Tamanho dos emojis */
+            transition: transform 0.1s ease-in-out;
+            overflow: hidden; /* Garante que o emoji não vaze */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        #apostaInput {
+            width: 80px;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1em;
+            background-color: #FFEB3B; /* Amarelo */
+            color: #8B4513; /* Marrom */
+            font-weight: bold;
+        }
+
+        #spinButton, #finalizar-apostas-btn {
+            background-color: #D32F2F; /* Vermelho vibrante */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 15px;
+            box-shadow: 0 5px #B71C1C;
+        }
+
+        #spinButton:hover, #finalizar-apostas-btn:hover {
+            background-color: #B71C1C;
+        }
+
+        #spinButton:active, #finalizar-apostas-btn:active {
+            background-color: #8D0C0C;
+            box-shadow: 0 2px #8D0C0C;
+            transform: translateY(3px);
+        }
+
+        .message-area {
+            background-color: #FFF3E0; /* Creme claro */
+            color: #8B4513; /* Marrom */
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .message-area.win {
+            background-color: #D4EDDA; /* Verde claro para vitórias */
+            color: #155724; /* Verde escuro */
+        }
+
+        .message-area.lose {
+            background-color: #F8D7DA; /* Vermelho claro para perdas */
+            color: #721C24; /* Vermelho escuro */
+        }
+
+        .message-area.bonus {
+            background-color: #CCE5FF; /* Azul claro para bônus */
+            color: #004085; /* Azul escuro */
+        }
+
+        .message-area.error {
+            background-color: #F8D7DA; /* Vermelho claro para erros */
+            color: #721C24; /* Vermelho escuro */
+        }
+
+        .rules {
+            background-color: rgba(0, 0, 0, 0.3); /* Fundo semi-transparente para as regras */
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .rules h2 {
+            color: #FFEB3B;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .rules ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        .rules ul li {
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .rules p {
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        /* Animação de giro */
+        .reel.spinning {
+            animation: spinReel 0.1s linear infinite; /* Rotação rápida para simular giro */
+        }
+
+        @keyframes spinReel {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); } /* Simula o giro subindo */
+        }
+    </style>
+</head>
+<body>
+    <audio id="backgroundMusic" src="quadrilha.mp3" loop autoplay></audio>
+    <audio id="loseSound" src="risadamaligna.mp3"></audio>
+    <audio id="winSound" src="myinstants.mp3" preload="auto"></audio> <div id="tela-inicial" class="tela-geral">
+        <h1>🌽 Arraiá da Sorte 🎈</h1>
+        <p class="subtitle">Bem-vindo(a) ao Caça-Níqueis Junino!</p>
+        <p>Por favor, digite seu nome para começar a diversão:</p>
+        <input type="text" id="nome-jogador" placeholder="Seu nome aqui">
+        <button id="iniciar-jogo">Começar Jogo</button>
+    </div>
+
+    <div class="game-container" id="conteudo-jogo" style="display: none;">
+        <h1>🌽 Arraiá da Sorte 🎈</h1>
+        <p class="subtitle">Gire e Ganhe Moedas Juninas!</p>
+
+        <div class="saldo">
+            Saldo: <span id="saldoAtual">100</span> moedas
+        </div>
+
+        <div class="reels">
+            <div class="reel" id="reel1"></div>
+            <div class="reel" id="reel2"></div>
+            <div class="reel" id="reel3"></div>
+        </div>
+
+        <div class="controls">
+            <label for="apostaInput">Aposta:</label>
+            <input type="number" id="apostaInput" value="1" min="1">
+            <button id="spinButton">Girar!</button>
+        </div>
+
+        <div class="message-area" id="messageArea">
+            Bem-vindo ao Arraiá da Sorte! Aposte e gire!
+        </div>
+
+        <div class="rules">
+            <h2>Regras do Arraiá:</h2>
+            <ul>
+                <li>🌽 Milho: 2x a aposta</li>
+                <li>🎈 Balão: 5x a aposta</li>
+                <li>🪗 Sanfona: 10x a aposta</li>
+                <li>🔥 Fogueira: 20x a aposta</li>
+                <li>🚩 Bandeirinha (Wild): 50x a aposta (Jackpot com 3 Bandeirinhas)</li>
+            </ul>
+            <p><strong>Recursos Especiais:</strong></p>
+            <ul>
+                <li>🐟 Peixe: Ativa Bônus da Pescaria!</li>
+                <li>🍷 Quentão: Pode ativar Multiplicador (2x, 3x, 5x) para a próxima vitória!</li>
+            </ul>
+        </div>
+        <button id="finalizar-apostas-btn">Ver Ranking / Finalizar Jogo</button>
+    </div>
+
+    <div id="ranking" class="tela-geral" style="display: none;">
+        <h1>🏆 Ranking do Arraiá da Sorte 🏆</h1>
+        <p class="subtitle">Confira os maiores festeiros!</p>
+        <ol id="lista-ranking">
+            </ol>
+        <button id="limpar-ranking-btn">Limpar Ranking</button>
+        <button id="reiniciar-jogo">Jogar Novamente!</button>
+    </div>
+
+    <script>
+        /* script.js */
+        const symbols = {
+            "🌽 Milho": { weight: 40, payout: 2 },
+            "🎈 Balão": { weight: 25, payout: 5 },
+            "🪗 Sanfona": { weight: 15, payout: 10 },
+            "🔥 Fogueira": { weight: 10, payout: 20 },
+            "🚩 Bandeirinha": { weight: 5, payout: 50, isWild: true },
+            "🐟 Peixe": { weight: 3, isBonus: true },
+            "🍷 Quentão": { weight: 2, isMultiplier: true }
+        };
+
+        const reels = [
+            document.getElementById('reel1'),
+            document.getElementById('reel2'),
+            document.getElementById('reel3')
+        ];
+        const saldoDisplay = document.getElementById('saldoAtual');
+        const apostaInput = document.getElementById('apostaInput');
+        const spinButton = document.getElementById('spinButton');
+        const messageArea = document.getElementById('messageArea');
+
+        // Referências aos elementos de áudio
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const loseSound = document.getElementById('loseSound');
+        const winSound = document.getElementById('winSound'); // NOVO: Referência ao som de vitória
+
+        // Elementos da tela inicial e ranking
+        const telaInicial = document.getElementById('tela-inicial');
+        const nomeJogadorInput = document.getElementById('nome-jogador');
+        const iniciarJogoBtn = document.getElementById('iniciar-jogo');
+        const rankingDiv = document.getElementById('ranking');
+        const listaRanking = document.getElementById('lista-ranking');
+        const reiniciarJogoBtn = document.getElementById('reiniciar-jogo');
+        const conteudoJogo = document.getElementById('conteudo-jogo');
+        const finalizarApostasBtn = document.getElementById('finalizar-apostas-btn');
+        // Nova referência para o botão de limpar ranking
+        const limparRankingBtn = document.getElementById('limpar-ranking-btn');
+
+
+        let saldo = 100;
+        let currentMultiplier = 1;
+        let nomeJogador = '';
+
+        // Array para armazenar os jogadores no ranking
+        let jogadoresRanking = [];
+
+        // --- Funções de Ranking e Armazenamento ---
+        function salvarRanking() {
+            localStorage.setItem('rankingArraia', JSON.stringify(jogadoresRanking));
+        }
+
+        function carregarRanking() {
+            const rankingSalvo = localStorage.getItem('rankingArraia');
+            if (rankingSalvo) {
+                jogadoresRanking = JSON.parse(rankingSalvo);
+            }
+            atualizarRankingVisual();
+        }
+
+        function atualizarRankingVisual() {
+            listaRanking.innerHTML = ''; // Limpa a lista atual
+            const rankingOrdenado = [...jogadoresRanking].sort((a, b) => b.pontuacao - a.pontuacao);
+
+            // Se o ranking estiver vazio, exibe uma mensagem
+            if (rankingOrdenado.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = "Ninguém festejou ainda! Seja o primeiro!";
+                li.style.textAlign = 'center';
+                li.style.listStyle = 'none'; // Remove o número para essa mensagem
+                listaRanking.appendChild(li);
+            } else {
+                rankingOrdenado.forEach((jogador, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${index + 1}. ${jogador.nome}: ${jogador.pontuacao} moedas`;
+                    listaRanking.appendChild(li);
+                });
+            }
+        }
+
+        // Função para limpar o ranking (NOVA FUNÇÃO)
+        function limparRanking() {
+            if (confirm("Tem certeza que deseja limpar todo o ranking? Esta ação é irreversível!")) {
+                jogadoresRanking = []; // Esvazia o array
+                salvarRanking();       // Salva o array vazio no localStorage
+                atualizarRankingVisual(); // Atualiza a exibição para mostrar que está vazio
+                alert("Ranking limpo com sucesso!");
+            }
+        }
+
+
+        // --- Funções de Jogo Existentes ---
+        function createWeightedSymbolList() {
+            const weightedList = [];
+            for (const [symbol, data] of Object.entries(symbols)) {
+                for (let i = 0; i < data.weight; i++) {
+                    weightedList.push(symbol);
+                }
+            }
+            return weightedList;
+        }
+
+        const weightedSymbols = createWeightedSymbolList();
+
+        function updateSaldo() {
+            saldoDisplay.textContent = saldo;
+        }
+
+        function showMessage(msg, type = 'info') {
+            messageArea.textContent = msg;
+            messageArea.className = 'message-area ' + type;
+        }
+
+        async function spinReels() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play().catch(e => console.error("Erro ao tentar tocar a música de fundo:", e));
+            }
+
+            const aposta = parseInt(apostaInput.value);
+
+            if (isNaN(aposta) || aposta < 1) {
+                showMessage("Por favor, insira um valor de aposta válido (mínimo 1).", 'error');
+                return;
+            }
+            if (aposta > saldo) {
+                showMessage("Você não tem moedas suficientes para essa aposta!", 'error');
+                return;
+            }
+
+            spinButton.disabled = true;
+            saldo -= aposta;
+            updateSaldo();
+            showMessage("Girando os rolos do Arraiá da Sorte...", 'info');
+
+            const finalResults = [];
+            reels.forEach(reel => reel.classList.add('spinning'));
+
+            for (let i = 0; i < 3; i++) {
+                const randomIndex = Math.floor(Math.random() * weightedSymbols.length);
+                const symbol = weightedSymbols[randomIndex];
+                finalResults.push(symbol);
+
+                await new Promise(resolve => setTimeout(() => {
+                    reels[i].textContent = symbol;
+                    reels[i].classList.remove('spinning');
+                    resolve();
+                }, (i + 1) * 300));
+            }
+
+            let ganhoRodada = 0;
+            const [s1, s2, s3] = finalResults;
+
+            if (finalResults.includes("🍷 Quentão")) {
+                const multipliers = [2, 3, 5];
+                currentMultiplier = multipliers[Math.floor(Math.random() * multipliers.length)];
+                showMessage(`✨ Quentão Multiplicador ativado! Sua próxima vitória será multiplicada por ${currentMultiplier}x!`, 'bonus');
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            } else {
+                currentMultiplier = 1;
+            }
+
+            const isWild1 = symbols[s1].isWild;
+            const isWild2 = symbols[s2].isWild;
+            const isWild3 = symbols[s3].isWild;
+
+            if (s1 === s2 && s2 === s3) {
+                if (symbols[s1].payout) {
+                    ganhoRodada = aposta * symbols[s1].payout;
+                    showMessage(`🎉 Parabéns! Três ${s1}! Você ganhou ${ganhoRodada} moedas juninas!`, 'win');
+                    winSound.play().catch(e => console.error("Erro ao tentar tocar o som de vitória:", e)); // SOM DE VITÓRIA
+                } else {
+                    showMessage("Boa tentativa, mas esses símbolos não dão prêmio por 3 iguais!", 'info');
+                }
+            } else if (isWild1 || isWild2 || isWild3) {
+                let wildCount = 0;
+                finalResults.forEach(s => {
+                    if (symbols[s].isWild) {
+                        wildCount++;
+                    }
+                });
+
+                if (wildCount === 1) {
+                    const nonWildSymbols = finalResults.filter(s => !symbols[s].isWild);
+                    if (nonWildSymbols.length === 2 && nonWildSymbols[0] === nonWildSymbols[1]) {
+                        winningSymbol = nonWildSymbols[0];
+                        ganhoRodada = (aposta * symbols[winningSymbol].payout) / 2;
+                        showMessage(`🎊 Combinação com Wild! Dois ${winningSymbol} com uma Bandeirinha! Você ganhou ${ganhoRodada.toFixed(0)} moedas juninas!`, 'win');
+                        winSound.play().catch(e => console.error("Erro ao tentar tocar o som de vitória:", e)); // SOM DE VITÓRIA
+                    } else {
+                        showMessage("A Bandeirinha apareceu, mas não formou uma combinação pagante.", 'info');
+                    }
+                } else if (wildCount === 2) {
+                    const nonWildSymbol = finalResults.find(s => !symbols[s].isWild);
+                    if (nonWildSymbol && symbols[nonWildSymbol].payout) {
+                        ganhoRodada = (aposta * symbols[nonWildSymbol].payout) / 1.5;
+                        showMessage(`🎉 Duas Bandeirinhas e ${nonWildSymbol}! Você ganhou ${ganhoRodada.toFixed(0)} moedas juninas!`, 'win');
+                        winSound.play().catch(e => console.error("Erro ao tentar tocar o som de vitória:", e)); // SOM DE VITÓRIA
+                    } else {
+                        showMessage("Quase lá! Duas Bandeirinhas, mas sem símbolo pagante para completar.", 'info');
+                    }
+                } else if (wildCount === 3) {
+                    ganhoRodada = aposta * symbols["🚩 Bandeirinha"].payout * 2;
+                    showMessage(`🥳🥳 JACKPOT! TRÊS BANDEIRINHAS! Você ganhou ${ganhoRodada.toFixed(0)} moedas juninas!`, 'win');
+                    winSound.play().catch(e => console.error("Erro ao tentar tocar o som de vitória:", e)); // SOM DE VITÓRIA
+                }
+                else {
+                    showMessage("A Bandeirinha apareceu, mas não formou uma combinação pagante.", 'info');
+                }
+            } else {
+                showMessage("😔 Que pena! Nenhuma combinação vencedora nesta rodada.", 'lose');
+                loseSound.play().catch(e => console.error("Erro ao tentar tocar o som de perda:", e));
+            }
+
+            if (ganhoRodada > 0 && currentMultiplier > 1) {
+                const ganhoMultiplicado = ganhoRodada * currentMultiplier;
+                showMessage(`${messageArea.textContent.split('!')[0]}! (Multiplicado por ${currentMultiplier}x! Total: ${ganhoMultiplicado.toFixed(0)} moedas!)`, 'win');
+                winSound.play().catch(e => console.error("Erro ao tentar tocar o som de vitória:", e)); // SOM DE VITÓRIA COM MULTIPLICADOR
+                ganhoRodada = ganhoMultiplicado;
+            }
+
+            saldo += Math.round(ganhoRodada);
+            updateSaldo();
+
+            if (finalResults.includes("🐟 Peixe")) {
+                await runFishingBonus(aposta);
+            }
+
+            spinButton.disabled = false;
+        }
+
+        async function runFishingBonus(apostaBase) {
+            showMessage("🎣🐟🎣 BÔNUS DA BARRACA DA PESCARIA! 🎣🐟🎣", 'bonus');
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const fishingPrizes = [
+                apostaBase * 0.5,
+                apostaBase * 1,
+                apostaBase * 2,
+                apostaBase * 3,
+                0, 0, 0
+            ];
+
+            for (let i = 0; i < 3; i++) {
+                showMessage(`Tentativa de Pescaria ${i+1}/3...`, 'bonus');
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                const prize = fishingPrizes[Math.floor(Math.random() * fishingPrizes.length)];
+
+                if (prize > 0) {
+                    saldo += Math.round(prize);
+                    showMessage(`✨ Você pescou ${Math.round(prize)} moedas juninas extras!`, 'win');
+                    winSound.play().catch(e => console.error("Erro ao tentar tocar o som de vitória no bônus:", e)); // SOM DE VITÓRIA NO BÔNUS
+                } else {
+                    showMessage("😔 Você não pescou nada desta vez.", 'lose');
+                    loseSound.play().catch(e => console.error("Erro ao tentar tocar o som de perda no bônus:", e));
+                }
+                updateSaldo();
+                await new Promise(resolve => setTimeout(resolve, 1500));
+            }
+            showMessage("Bônus da Pescaria encerrado!", 'info');
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            showMessage("Aguardando sua próxima aposta...", 'info');
+        }
+
+        // --- Novos Event Listeners e Lógica de Telas ---
+
+        iniciarJogoBtn.addEventListener('click', () => {
+            nomeJogador = nomeJogadorInput.value.trim();
+            if (nomeJogador) {
+                telaInicial.style.display = 'none';
+                conteudoJogo.style.display = 'block';
+                saldo = 100; // Reseta o saldo para o início do jogo
+                updateSaldo();
+                showMessage("Bem-vindo(a) ao Arraiá da Sorte! Aposte e gire!", 'info');
+                backgroundMusic.play().catch(e => console.error("Erro ao tentar tocar a música de fundo:", e));
+            } else {
+                alert('Por favor, digite seu nome para começar!');
+            }
+        });
+
+        finalizarApostasBtn.addEventListener('click', () => {
+            // Garante que o jogador atual seja salvo antes de ir para o ranking
+            const jogadorExistenteIndex = jogadoresRanking.findIndex(j => j.nome === nomeJogador);
+            if (jogadorExistenteIndex > -1) {
+                if (saldo > jogadoresRanking[jogadorExistenteIndex].pontuacao) {
+                    jogadoresRanking[jogadorExistenteIndex].pontuacao = saldo;
+                }
+            } else {
+                // Adiciona o jogador apenas se tiver um nome e saldo inicial (ou mais)
+                if (nomeJogador && saldo > 0) { // Pode ajustar essa condição se quiser salvar todos os que jogaram
+                    jogadoresRanking.push({ nome: nomeJogador, pontuacao: saldo });
+                }
+            }
+
+            salvarRanking();
+            atualizarRankingVisual(); // Garante que a lista visual esteja atualizada
+
+            conteudoJogo.style.display = 'none';
+            rankingDiv.style.display = 'block';
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0;
+        });
+
+        reiniciarJogoBtn.addEventListener('click', () => {
+            nomeJogadorInput.value = '';
+            telaInicial.style.display = 'block';
+            rankingDiv.style.display = 'none';
+            conteudoJogo.style.display = 'none';
+            saldo = 100;
+            updateSaldo();
+            showMessage("Bem-vindo(a) ao Arraiá da Sorte! Aposte e gire!", 'info');
+            backgroundMusic.play().catch(e => console.error("Erro ao tentar tocar a música de fundo:", e));
+        });
+
+        // Event listener para o novo botão de limpar ranking
+        limparRankingBtn.addEventListener('click', limparRanking);
+
+        spinButton.addEventListener('click', spinReels);
+        apostaInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                spinReels();
+            }
+        });
+
+        // Carregar o ranking e inicializar a tela ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarRanking();
+            telaInicial.style.display = 'block';
+            conteudoJogo.style.display = 'none';
+            rankingDiv.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
